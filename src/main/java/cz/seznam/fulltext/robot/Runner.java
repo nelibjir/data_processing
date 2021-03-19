@@ -2,8 +2,6 @@ package cz.seznam.fulltext.robot;
 
 import cz.seznam.fulltext.robot.enums.ProcessorEnum;
 import cz.seznam.fulltext.robot.services.processors.IProcessor;
-import cz.seznam.fulltext.robot.services.processors.TopProcessor;
-import org.apache.commons.text.CaseUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -79,13 +77,12 @@ public class Runner {
   // get rid fo literals
   public static void main(String[] args) throws Exception {
     checkArgs(args);
-    System.out.println("Class name "+ (TopProcessor.class.getName()));
     String className = PATH_TO_PROCESSORS+args[0]+"Processor";
 
     IProcessor processor = (IProcessor) Class
             .forName(className)
-            .getDeclaredConstructor()
-            .newInstance();
+            .getDeclaredConstructor(args.getClass())
+            .newInstance((Object) args);
 
     process(processor);
   }
@@ -132,6 +129,7 @@ public class Runner {
     return processor.getNumberOfArg() == numOfParameters;
   }
 
+  //TODO test yet conditions
   private static boolean isSupportedClass(String processorName, int numOfParameters) {
     for (ProcessorEnum p : ProcessorEnum.values()) {
       if (p.name().equals(processorName)) {

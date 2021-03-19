@@ -7,7 +7,7 @@ import java.util.TreeSet;
 public class TopProcessor implements IProcessor {
     private TreeSet<TopClickNode> topClickNodeSet;
 
-    TopProcessor(){
+    public TopProcessor(String[] params){
         topClickNodeSet = new TreeSet<>();
     }
 
