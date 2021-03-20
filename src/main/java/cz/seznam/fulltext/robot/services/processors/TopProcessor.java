@@ -13,8 +13,9 @@ public class TopProcessor implements IProcessor {
 
     //todo check args
     @Override
-    public void process(String[] args) {
-        writeHighestTenClicks(Integer.parseInt(args[2]),args[0]);
+    public void process(String line) {
+        String[] attributes = line.split("\\t"); //TODO better name?
+        writeHighestTenClicks(Integer.parseInt(attributes[2]),attributes[0]);
     }
 
     @Override

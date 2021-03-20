@@ -110,11 +110,10 @@ public class Runner {
       while( (line = f.readLine()) != null )
       {
         counter++;
-        sentenceAttributes = line.split("\\t");
 
-        processor.process(sentenceAttributes);
+        processor.process(line);
 
-        if (counter > 20)
+        if (counter > 100)
           break;
       }
     } catch (IOException exception){

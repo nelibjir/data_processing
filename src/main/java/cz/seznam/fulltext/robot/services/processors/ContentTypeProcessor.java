@@ -13,9 +13,10 @@ public class ContentTypeProcessor implements IProcessor{
     // concurrent solution there
     // TODO literals remove and chack rules about 1 line if - these args are content -> make enum
     @Override
-    public void process(String[] args) {
-        if (contentTypeToCount.computeIfPresent(args[1], (k, v) -> v + 1) == null)
-            contentTypeToCount.put(args[1], 1);  // should be O(1)
+    public void process(String line) {
+        String[] attributes = line.split("\\t");
+        if (contentTypeToCount.computeIfPresent(attributes[1], (k, v) -> v + 1) == null)
+            contentTypeToCount.put(attributes[1], 1);  // should be O(1)
     }
 
     @Override
