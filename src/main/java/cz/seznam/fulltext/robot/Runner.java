@@ -1,12 +1,10 @@
 package cz.seznam.fulltext.robot;
 
-import cz.seznam.fulltext.robot.enums.ProcessorEnum;
 import cz.seznam.fulltext.robot.services.processors.IProcessor;
+import cz.seznam.fulltext.robot.utils.readers.DataReader;
+import cz.seznam.fulltext.robot.validators.CommandLineValidator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Locale;
 
 
 /**
@@ -69,72 +67,22 @@ import java.util.Locale;
  * <p>Try to minimize the application's memory footprint and CPU usage.
  */
 public class Runner {
-
-  private static final int MAX_NUMBER_ARG = 2;
   private static final String PATH_TO_PROCESSORS = "cz.seznam.fulltext.robot.services.processors.";
+  private static final String PROCESSOR_NAME_ENDING = "Processor";
 
   // more threads?
-  // get rid fo literals
   public static void main(String[] args) throws Exception {
-    checkArgs(args);
-    String className = PATH_TO_PROCESSORS+args[0]+"Processor";
+    CommandLineValidator validator = new CommandLineValidator(args);
+    validator.checkArgs();
+
+    String className = PATH_TO_PROCESSORS+args[0]+PROCESSOR_NAME_ENDING;
 
     IProcessor processor = (IProcessor) Class
             .forName(className)
             .getDeclaredConstructor(args.getClass())
             .newInstance((Object) args);
 
-    process(processor);
-  }
-
-  static void checkArgs(String[] args) {
-    if (args == null || args.length == 0){
-      throw new IllegalArgumentException("The application was called with no arguments!");
-    }
-
-    // too long
-    if (args.length > MAX_NUMBER_ARG){
-      throw new IllegalArgumentException("The application was called with to many arguments! Number of arguments is: " + args.length);
-    }
-
-    String normalized_arg  = args[0].toUpperCase(Locale.ROOT);
-    isSupportedClass(normalized_arg, args.length -1);
-  }
-
-  /** if slow try to use https://github.com/williamfiset/FastJavaIO */
-  static void process(IProcessor processor) throws IOException {
-    String line;
-    String [] sentenceAttributes;
-    int counter = 0;
-    try(BufferedReader f = new BufferedReader(new InputStreamReader(System.in))) {
-      while( (line = f.readLine()) != null )
-      {
-        counter++;
-
-        processor.process(line);
-
-        if (counter > 100)
-          break;
-      }
-    } catch (IOException exception){
-      System.out.println("An exception happened hen reading from input file "+ exception);
-      throw exception;
-    }
-
+    DataReader.readAndProcess(new InputStreamReader(System.in),processor);
     processor.writeOutput();
-  }
-
-  private static boolean hasCorrectNumberOfParameter(ProcessorEnum processor ,int numOfParameters) {
-    return processor.getNumberOfArg() == numOfParameters;
-  }
-
-  //TODO test yet conditions
-  private static boolean isSupportedClass(String processorName, int numOfParameters) {
-    for (ProcessorEnum p : ProcessorEnum.values()) {
-      if (p.name().equals(processorName)) {
-        if (hasCorrectNumberOfParameter(p, numOfParameters)) return true;
-      }
-    }
-    throw new IllegalArgumentException("Processor with name "+ processorName + " and with parameters: "+numOfParameters+" is not supported!");
   }
 }

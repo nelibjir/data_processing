@@ -2,9 +2,12 @@ package cz.seznam.fulltext.robot.services.processors;
 
 import cz.seznam.fulltext.robot.models.TopClickNode;
 
+import java.util.Iterator;
 import java.util.TreeSet;
 
 public class TopProcessor implements IProcessor {
+    private final static String INPUT_SEPARATOR = "\\t";
+
     private TreeSet<TopClickNode> topClickNodeSet;
 
     public TopProcessor(String[] params){
@@ -14,14 +17,15 @@ public class TopProcessor implements IProcessor {
     //todo check args
     @Override
     public void process(String line) {
-        String[] attributes = line.split("\\t"); //TODO better name?
-        writeHighestTenClicks(Integer.parseInt(attributes[2]),attributes[0]);
+        String[] columns = line.split(INPUT_SEPARATOR);
+        writeHighestTenClicks(Integer.parseInt(columns[2]),columns[0]);
     }
 
     @Override
     public void writeOutput() {
-        for (TopClickNode element : topClickNodeSet) {
-            System.out.println(element);
+        Iterator itr = topClickNodeSet.descendingIterator();
+        while (itr.hasNext()) {
+            System.out.println(itr.next());
         }
     }
 
