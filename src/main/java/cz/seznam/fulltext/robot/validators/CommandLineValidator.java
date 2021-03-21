@@ -20,17 +20,19 @@ public class CommandLineValidator {
             throw new IllegalArgumentException("The application was called with to many arguments!" + args.length);
 
         String normalized_arg  = args[0].toUpperCase(Locale.ROOT);
-        ProcessorEnum processor = getSupportedClass(normalized_arg, args.length -1);
+        ProcessorEnum processor = getSupportedClass(normalized_arg);
         if (!hasCorrectNumberOfParameter(processor, args.length -1))
             throw new IllegalArgumentException("Processor "+ processor.name() + "was called with wrong number of arguments! " + args.length);
     }
 
     public boolean hasCorrectNumberOfParameter(ProcessorEnum processor , int numOfParameters) {
+        if (processor == null)
+            throw new NullPointerException("Processor can' be null!");
+
         return processor.getNumberOfArg() == numOfParameters;
     }
 
-    //TODO test yet conditions
-    public ProcessorEnum getSupportedClass(String processorName, int numOfParameters) {
+    public ProcessorEnum getSupportedClass(String processorName) {
         for (ProcessorEnum p : ProcessorEnum.values()) {
             if (p.name().equals(processorName))
                  return p;

@@ -7,6 +7,10 @@ import java.util.TreeSet;
 
 public class TopProcessor implements IProcessor {
     private final static String INPUT_SEPARATOR = "\\t";
+    private final static int NUMBER_OF_COLUMNS = 3;
+    private final static int NUMBER_OF_CLICKS_COLUMN_INDEX = 2;
+    private final static int NUMBER_OF_TOP_URL = 10;
+    private final static int URL_COLUMN_INDEX = 0;
 
     private TreeSet<TopClickNode> topClickNodeSet;
 
@@ -14,11 +18,18 @@ public class TopProcessor implements IProcessor {
         topClickNodeSet = new TreeSet<>();
     }
 
-    //todo check args
     @Override
     public void process(String line) {
+        if (line == null || line.isEmpty())
+            return;
+
         String[] columns = line.split(INPUT_SEPARATOR);
-        writeHighestTenClicks(Integer.parseInt(columns[2]),columns[0]);
+        if (columns.length != NUMBER_OF_COLUMNS) {
+            System.out.println("Line ignored because of bad structure!");
+            return;
+        }
+
+        writeHighestTenClicks(Integer.parseInt(columns[NUMBER_OF_CLICKS_COLUMN_INDEX]),columns[URL_COLUMN_INDEX]);
     }
 
     @Override
@@ -30,7 +41,7 @@ public class TopProcessor implements IProcessor {
     }
 
     private void addNewNode(TopClickNode newValue){
-        if (topClickNodeSet.size() < 10) {
+        if (topClickNodeSet.size() < NUMBER_OF_TOP_URL) {
             topClickNodeSet.add(newValue);
             return;
         }

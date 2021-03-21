@@ -3,8 +3,11 @@ package cz.seznam.fulltext.robot.services.processors;
 import java.util.*;
 
 public class ContentTypeProcessor implements IProcessor{
-    private final static String OUTPUT_SEPARATOR = "\t";
+    private final static int CONTENT_TYPE_COLUMN_INDEX = 1;
     private final static String INPUT_SEPARATOR = "\\t";
+    private final static int INITIAL_COUNT = 0;
+    private final static int NUMBER_OF_COLUMNS = 3;
+    private final static String OUTPUT_SEPARATOR = "\t";
 
     private HashMap<String, Integer> contentTypeToCount; // will be small in memory
 
@@ -12,7 +15,10 @@ public class ContentTypeProcessor implements IProcessor{
         contentTypeToCount = new HashMap<>();
     }
 
-    // TODO and check rules about 1 line if - these args are content -> make enum
+    public HashMap<String, Integer> getContentTypeToCount() {
+        return contentTypeToCount;
+    }
+
     /**
      * Process the line and makes mark for the given content type
      * columns[1] is content_type column
@@ -20,9 +26,17 @@ public class ContentTypeProcessor implements IProcessor{
      */
     @Override
     public void process(String line) {
+        if (line == null || line.isEmpty())
+            return;
+
         String[] columns = line.split(INPUT_SEPARATOR);
-        if (contentTypeToCount.computeIfPresent(columns[1], (k, v) -> v + 1) == null)
-            contentTypeToCount.put(columns[1], 1);  // should be O(1)
+        if (columns.length != NUMBER_OF_COLUMNS) {
+            System.out.println("Line ignored because of bad structure!");
+            return;
+        }
+
+        if (contentTypeToCount.computeIfPresent(columns[CONTENT_TYPE_COLUMN_INDEX], (k, v) -> v + 1) == null)
+            contentTypeToCount.put(columns[CONTENT_TYPE_COLUMN_INDEX], INITIAL_COUNT + 1);  // should be O(1)
     }
 
     @Override
