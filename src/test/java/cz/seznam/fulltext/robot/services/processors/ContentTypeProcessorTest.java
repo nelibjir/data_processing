@@ -13,14 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ContentTypeProcessorTest {
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
-    private final PrintStream originalErr = System.err;
 
     @BeforeEach
     public void setUpStreams() {
         System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
     }
 
     @Test
@@ -68,6 +65,5 @@ public class ContentTypeProcessorTest {
     @AfterEach
     public void restoreStreams() {
         System.setOut(originalOut);
-        System.setErr(originalErr);
     }
 }
