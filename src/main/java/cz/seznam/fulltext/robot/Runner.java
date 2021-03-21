@@ -70,7 +70,6 @@ public class Runner {
   private static final String PATH_TO_PROCESSORS = "cz.seznam.fulltext.robot.services.processors.";
   private static final String PROCESSOR_NAME_ENDING = "Processor";
 
-  // more threads?
   public static void main(String[] args) throws Exception {
     CommandLineValidator validator = new CommandLineValidator(args);
     validator.checkArgs();
@@ -82,7 +81,9 @@ public class Runner {
             .getDeclaredConstructor(args.getClass())
             .newInstance((Object) args);
 
+    // TODO use async and threads if would be slow on this method
     DataReader.readAndProcess(new InputStreamReader(System.in),processor);
+
     processor.writeOutput();
   }
 }

@@ -22,7 +22,7 @@ public class CommandLineValidator {
         String normalized_arg  = args[0].toUpperCase(Locale.ROOT);
         ProcessorEnum processor = getSupportedClass(normalized_arg);
         if (!hasCorrectNumberOfParameter(processor, args.length -1))
-            throw new IllegalArgumentException("Processor "+ processor.name() + "was called with wrong number of arguments! " + args.length);
+            throw new IllegalArgumentException("Processor "+ processor.name() + " was called with wrong number of arguments! " + args.length);
     }
 
     public boolean hasCorrectNumberOfParameter(ProcessorEnum processor , int numOfParameters) {

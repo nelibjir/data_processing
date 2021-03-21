@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class DataReader {
-    private static int BUFFER_SIZE = 8192; // TODO later set in config file
+    private static int BUFFER_SIZE = 8192;
 
     public static void readAndProcess(Reader reader, IProcessor processor) throws IOException {
         String line;

@@ -1,7 +1,7 @@
 package cz.seznam.fulltext.robot.services.processors;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -17,7 +17,7 @@ public class ContentTypeProcessorTest {
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
 
-    @Before
+    @BeforeEach
     public void setUpStreams() {
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
@@ -28,16 +28,16 @@ public class ContentTypeProcessorTest {
         String[] params = new String[]{};
         ContentTypeProcessor p = new ContentTypeProcessor(params);
 
-        String line = "asdwqdqw text/html 46456";
+        String line = "asdwqdqw\ttext/html\t 46456";
         p.process(line);
-        line = "asdwqdqw text/pdf 456456";
+        line = "asdwqdqw\ttext/pdf\t456456";
         p.process(line);
-        line = "asdwqdqw text/html 65464";
+        line = "asdwqdqw\ttext/html\t65464";
         p.process(line);
 
         TreeMap<String, Integer> expectedMap = new TreeMap<>();
         expectedMap.put("text/html", 2);
-        expectedMap.put("text/pdf ", 1);
+        expectedMap.put("text/pdf", 1);
 
         assertEquals(expectedMap, p.getContentTypeToCount());
     }
@@ -58,14 +58,14 @@ public class ContentTypeProcessorTest {
         String[] params = new String[]{};
         ContentTypeProcessor p = new ContentTypeProcessor(params);
 
-        String line = "asdwqdqw text/html 46456";
+        String line = "asdwqdqw\ttext/html\t 46456";
         p.process(line);
 
         p.writeOutput();
-        assertEquals("text/html\t1", outContent.toString());
+        assertEquals("text/html\t1\r\n", outContent.toString());
     }
 
-    @After
+    @AfterEach
     public void restoreStreams() {
         System.setOut(originalOut);
         System.setErr(originalErr);
