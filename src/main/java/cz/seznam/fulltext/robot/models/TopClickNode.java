@@ -3,6 +3,8 @@ package cz.seznam.fulltext.robot.models;
 import java.util.Objects;
 
 public class TopClickNode implements Comparable<TopClickNode>{
+    private final static String OUTPUT_SEPARATOR = "\t";
+
     private final int numberOfClicks;
     private final String url;
 
@@ -39,9 +41,6 @@ public class TopClickNode implements Comparable<TopClickNode>{
 
     @Override
     public String toString() {
-        return "TopClickNode{" +
-                "numberOfClicks=" + numberOfClicks +
-                ", url='" + url + '\'' +
-                '}';
+        return url + OUTPUT_SEPARATOR + numberOfClicks;
     }
 }
