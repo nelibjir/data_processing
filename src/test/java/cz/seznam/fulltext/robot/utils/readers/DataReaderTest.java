@@ -19,7 +19,7 @@ class DataReaderTest {
         System.setIn(new ByteArrayInputStream(data.getBytes()));
 
         ContentTypeProcessor p = new ContentTypeProcessor(args);
-        DataReader.readAndProcess(new InputStreamReader(System.in), p);
+        DataReader.readAndProcess(new InputStreamReader(System.in), p, null);
 
         TreeMap<String, Integer> expectMap = new TreeMap<>();
         expectMap.put("text", 1);

@@ -3,6 +3,7 @@ package cz.seznam.fulltext.robot;
 import cz.seznam.fulltext.robot.services.processors.IProcessor;
 import cz.seznam.fulltext.robot.utils.readers.DataReader;
 import cz.seznam.fulltext.robot.validators.CommandLineValidator;
+import cz.seznam.fulltext.robot.validators.ICommandLineValidator;
 
 import java.io.InputStreamReader;
 
@@ -71,8 +72,8 @@ public class Runner {
   private static final String PROCESSOR_NAME_ENDING = "Processor";
 
   public static void main(String[] args) throws Exception {
-    CommandLineValidator validator = new CommandLineValidator(args);
-    validator.checkArgs();
+    ICommandLineValidator validator = new CommandLineValidator(args);
+    validator.check();
 
     String className = PATH_TO_PROCESSORS+args[0]+PROCESSOR_NAME_ENDING;
 
@@ -81,8 +82,7 @@ public class Runner {
             .getDeclaredConstructor(args.getClass())
             .newInstance((Object) args);
 
-    // TODO use async and threads if would be slow on this method
-    DataReader.readAndProcess(new InputStreamReader(System.in),processor);
+    DataReader.readAndProcess(new InputStreamReader(System.in),processor, null);
 
     processor.writeOutput();
   }

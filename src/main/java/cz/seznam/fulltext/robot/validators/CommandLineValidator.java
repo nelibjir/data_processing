@@ -4,7 +4,7 @@ import cz.seznam.fulltext.robot.enums.ProcessorEnum;
 
 import java.util.Locale;
 
-public class CommandLineValidator {
+public class CommandLineValidator implements ICommandLineValidator {
     private static final int MAX_NUMBER_ARG = 2;
     private String[] args;
 
@@ -12,7 +12,12 @@ public class CommandLineValidator {
         this.args = args;
     }
 
-    public void checkArgs() {
+    /**
+     * check the give arguments for all the conditions, if the condition is not met
+     * throws IllegalArgumentException
+     * @throws IllegalArgumentException if wrong number of arguments or arguments are not valid
+     */
+    public void check() {
         if (args == null || args.length == 0)
             throw new IllegalArgumentException("The application was called with no arguments!");
 
