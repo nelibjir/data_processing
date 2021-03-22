@@ -24,12 +24,14 @@ public class TopProcessor implements IProcessor {
             return;
 
         String[] columns = line.split(INPUT_SEPARATOR);
-        if (columns.length != NUMBER_OF_COLUMNS) {
-            System.out.println("Line ignored because of bad structure!");
+        if (columns.length != NUMBER_OF_COLUMNS)
             return;
-        }
 
-        writeHighestTenClicks(Integer.parseInt(columns[NUMBER_OF_CLICKS_COLUMN_INDEX]),columns[URL_COLUMN_INDEX]);
+        int numOfClicks = getNumberOfClicks(columns[NUMBER_OF_CLICKS_COLUMN_INDEX]);
+        if (numOfClicks < 0)
+            return;
+
+        writeHighestTenClicks(numOfClicks,columns[URL_COLUMN_INDEX]);
     }
 
     @Override
@@ -54,5 +56,16 @@ public class TopProcessor implements IProcessor {
 
     private void writeHighestTenClicks(int numOfClicks, String url){
         addNewNode(new TopClickNode(numOfClicks, url));
+    }
+
+    private int getNumberOfClicks (String numberOfClicks){
+        int numOfClicks;
+        try {
+            numOfClicks = Integer.parseInt(numberOfClicks);
+        } catch (NumberFormatException ex){
+            return -1;
+        }
+
+        return numOfClicks;
     }
 }

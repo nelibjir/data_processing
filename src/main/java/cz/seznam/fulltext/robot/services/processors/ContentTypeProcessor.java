@@ -30,10 +30,8 @@ public class ContentTypeProcessor implements IProcessor{
             return;
 
         String[] columns = line.split(INPUT_SEPARATOR);
-        if (columns.length != NUMBER_OF_COLUMNS) {
-            System.out.println("Line ignored because of bad structure!");
+        if (columns.length != NUMBER_OF_COLUMNS)
             return;
-        }
 
         if (contentTypeToCount.computeIfPresent(columns[CONTENT_TYPE_COLUMN_INDEX], (k, v) -> v + 1) == null)
             contentTypeToCount.put(columns[CONTENT_TYPE_COLUMN_INDEX], INITIAL_COUNT + 1);  // should be O(1)
